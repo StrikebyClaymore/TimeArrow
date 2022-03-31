@@ -21,7 +21,7 @@ public class AlarmClockButton : MonoBehaviour
     private void ConnectActions()
     {
         button.onClick.AddListener(On);
-        button.onClick.AddListener(ApplicationManager.AlarmClockManager.SetAlarmClockActive);
+        button.onClick.AddListener(AlarmClockManager.AlarmClock.Enable);
     }
 
     public void On()

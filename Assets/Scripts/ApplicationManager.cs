@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(
+    typeof(AlarmClockManager),
+    typeof(RootMenu))]
 public class ApplicationManager : MonoBehaviour
 {
     public static AlarmClockManager AlarmClockManager;

@@ -17,6 +17,8 @@ public class Clock : MonoBehaviour
     private Quaternion _hourAngle;
     private Quaternion _minuteAngle;
     private Quaternion _secondAngle;
+    
+    [SerializeField] private UnityEvent AlarmTrigger;
 
     private void Start()
     {
@@ -43,5 +45,10 @@ public class Clock : MonoBehaviour
     {
         Invoke(nameof(OnTimeChanged), 1 - DateTime.Now.Millisecond * 0.001f);
         timeText.text = DateTime.Now.ToString("HH:mm:ss");
+        
+        if (ApplicationManager.AlarmClockManager.TimeIsAlarmTime())
+            AlarmTrigger.Invoke();
+
+        ApplicationManager.AlarmClockManager.CheckNextWeek();
     }
 }

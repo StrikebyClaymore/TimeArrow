@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +31,7 @@ public class AlarmClockMenu : BaseMenu
 
     public void SetTime()
     {
-        timeText.text = ApplicationManager.AlarmClockManager.FormatTime();
+        timeText.text = new TimeSpan().FormatToAlarmTime();
     }
 
     public void SetDate()
