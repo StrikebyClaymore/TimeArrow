@@ -18,13 +18,13 @@ public class AlarmClock
     
     public void ResetAllDays() => _playedAlarmsList = new bool[7];
     
-    public void ResetCurrentDay() => _playedAlarmsList[ApplicationManager.AlarmClockManager.dayOfWeek] = false;
+    public void ResetCurrentDay() => _playedAlarmsList[ApplicationManager.AlarmClockManager.weekOfMonth] = false;
     
     public void Enable() => On = !On && DaysOn.FirstOrDefault(day => day);
 
-    public bool CurrentDayAlarmIsPlayed() => _playedAlarmsList[ApplicationManager.AlarmClockManager.dayOfWeek];
+    public bool CurrentDayAlarmIsPlayed() => _playedAlarmsList[ApplicationManager.AlarmClockManager.weekOfMonth];
 
-    public void CurrentDayAlarmSetPlayed() => _playedAlarmsList[ApplicationManager.AlarmClockManager.dayOfWeek] = true;
+    public void CurrentDayAlarmSetPlayed() => _playedAlarmsList[ApplicationManager.AlarmClockManager.weekOfMonth] = true;
 
     public DateTime GetDateTime()
     {

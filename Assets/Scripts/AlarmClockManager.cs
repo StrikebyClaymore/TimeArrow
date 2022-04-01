@@ -1,4 +1,5 @@
 ﻿using System;
+using Extensions;
 using UnityEngine;
 
 [RequireComponent(typeof(AlarmPlayer))]
@@ -6,7 +7,8 @@ public class AlarmClockManager : MonoBehaviour
 {
     public static AlarmClock AlarmClock;
     private AlarmPlayer _alarmPlayer;
-    public int dayOfWeek;
+    public int weekOfMonth;
+    private DateTime _date;
 
     private void Awake()
     {
@@ -42,16 +44,15 @@ public class AlarmClockManager : MonoBehaviour
         return systemTime.Hour == alarmTime.Hour && systemTime.Minute == alarmTime.Minute;
     }
 
-    public void CheckNextWeek() // TODO: rewrite this method for fix bug
+    public void CheckNextWeek()
     {
-        var systemDayOfWeek = (int) DateTime.Now.DayOfWeek - 1;
-        if (dayOfWeek == systemDayOfWeek)
+        var systemDate = DateTime.Now;
+        var systemWeekOfMonth = systemDate.WeekOfMonth();
+        if (_date.Year == systemDate.Year && _date.Month == systemDate.Month && weekOfMonth == systemWeekOfMonth)
             return;
-        if (dayOfWeek == 6 && systemDayOfWeek == 0)
-        {
-            AlarmClock.ResetAllDays();
-        }
-        dayOfWeek = systemDayOfWeek;
+        _date = systemDate;
+        weekOfMonth = systemWeekOfMonth;
+        AlarmClock.ResetAllDays();
     }
 
     public void SetAlarm()
@@ -62,15 +63,16 @@ public class AlarmClockManager : MonoBehaviour
 
     private void Save()
     {
-        PlayerPrefs.SetInt("DayOfWeek", dayOfWeek + 1);
+        PlayerPrefs.SetInt("WeekOfMonth", weekOfMonth);
+        PlayerPrefs.SetString("Date", _date.ToString("d"));
     }
     
     private void Load()
     {
-        dayOfWeek = PlayerPrefs.GetInt("DayOfWeek");
-        if (dayOfWeek == 0)
-            dayOfWeek = (int) DateTime.Now.DayOfWeek;
-        dayOfWeek--;
+        weekOfMonth = PlayerPrefs.GetInt("WeekOfMonth");
+        if (weekOfMonth == 0)
+            weekOfMonth = DateTime.Now.WeekOfMonth();
+        _date = DateTime.Parse(PlayerPrefs.GetString("Date"));
     }
 
     private void OnApplicationQuit()
