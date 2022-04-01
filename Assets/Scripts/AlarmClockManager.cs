@@ -7,6 +7,7 @@ public class AlarmClockManager : MonoBehaviour
 {
     public static AlarmClock AlarmClock;
     private AlarmPlayer _alarmPlayer;
+    [HideInInspector]
     public int weekOfMonth;
     private DateTime _date;
 
@@ -72,7 +73,12 @@ public class AlarmClockManager : MonoBehaviour
         weekOfMonth = PlayerPrefs.GetInt("WeekOfMonth");
         if (weekOfMonth == 0)
             weekOfMonth = DateTime.Now.WeekOfMonth();
-        _date = DateTime.Parse(PlayerPrefs.GetString("Date"));
+        
+        var dateString = PlayerPrefs.GetString("Date");
+        if (dateString == "")
+            dateString = DateTime.Now.ToString("d");
+        else
+            _date = DateTime.Parse(dateString);
     }
 
     private void OnApplicationQuit()
