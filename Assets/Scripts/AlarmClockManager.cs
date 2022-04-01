@@ -56,12 +56,6 @@ public class AlarmClockManager : MonoBehaviour
         AlarmClock.ResetAllDays();
     }
 
-    public void SetAlarm()
-    {
-        AlarmClock.Hour = DateTime.Now.Hour;
-        AlarmClock.Minute = DateTime.Now.Minute;
-    }
-
     private void Save()
     {
         PlayerPrefs.SetInt("WeekOfMonth", weekOfMonth);
