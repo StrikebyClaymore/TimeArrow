@@ -68,6 +68,7 @@ public class TimeSelector : MonoBehaviour
     private void SelectTime(Vector3 position, int time, SetTimeTypeEnum type = SetTimeTypeEnum.Init)
     {
         circle.position = position;
+        lineRenderer.SetPosition(0, transform.position);
         lineRenderer.SetPosition(1, position);
 
         TimeSpan timeSpan;

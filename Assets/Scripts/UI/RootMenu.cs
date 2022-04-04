@@ -2,10 +2,16 @@
 
 public class RootMenu : MonoBehaviour
 {
+    [Header("Orientation")]
+    [SerializeField] private GameObject portrait;
+    [SerializeField] private GameObject landscape;
+    
     [Header("Menu")]
     public ClockMenu clockMenu;
     public AlarmClockMenu alarmClockMenu;
-    
+
+    [SerializeField] private MenuChanger menuChanger;
+       
     public enum MenuTypeEnum
     {
         ClockMenu,
@@ -36,7 +42,24 @@ public class RootMenu : MonoBehaviour
                 break;
         }
     }
-    
+
+    public void ChangeOrientation(DeviceOrientation orientation)
+    {
+        switch (orientation)
+        {
+            case DeviceOrientation.Portrait:
+                landscape.SetActive(false);
+                portrait.SetActive(true);
+                break;
+            default:
+                portrait.SetActive(false);
+                landscape.SetActive(true);
+                break;
+        }
+        
+        menuChanger.Change(orientation, clockMenu, alarmClockMenu);
+    }
+
     private void DeactivateControllers()
     {
         clockMenu.Deactivate();
