@@ -10,11 +10,13 @@ public class TimeSelectorBuilder : MonoBehaviour
     [SerializeField] private Transform hoursContainer;
     [SerializeField] private Transform minutesContainer;
     [SerializeField] private SelectableObject minuteSelectableObjectPrefab;
-    
     [SerializeField] private RectTransform minutesFaceImage;
-    
-    private void Awake()
+
+    private SetTimeView _rootUI;
+
+    public void Init(SetTimeView rootUI)
     {
+        _rootUI = rootUI;
         InitSelectableObjects();
     }
 
@@ -44,13 +46,14 @@ public class TimeSelectorBuilder : MonoBehaviour
                         time = i + 1;
                     break;
             }
-            selectableObject.Init(timeSelector, timeSelector.SelectedTime, time, TimeSelector.SetTimeTypeEnum.Hour);
+            selectableObject.Init(time, SetTimeSubMenu.SetTimeTypeEnum.Hour);
+            selectableObject.ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
         }
     }
 
     private void InitMinutes()
     {
-        minutesContainer.GetChild(0).GetComponent<SelectableObject>().Init(timeSelector, timeSelector.SelectedTime, 0, TimeSelector.SetTimeTypeEnum.Minute);
+        minutesContainer.GetChild(0).GetComponent<SelectableObject>().Init(0, SetTimeSubMenu.SetTimeTypeEnum.Minute);
         
         var radius = minutesFaceImage.sizeDelta.x/2;
 
@@ -59,9 +62,10 @@ public class TimeSelectorBuilder : MonoBehaviour
             var angle = i * -6f;
             var rotation = Quaternion.Euler(0, 0, angle);
             var pos = rotation * Vector3.up * radius;
-            var obj = Instantiate(minuteSelectableObjectPrefab, Vector3.zero, rotation, minutesContainer);
-            obj.transform.localPosition = pos;
-            obj.Init(timeSelector, timeSelector.SelectedTime, i, TimeSelector.SetTimeTypeEnum.Minute);
+            var selectableObject = Instantiate(minuteSelectableObjectPrefab, Vector3.zero, rotation, minutesContainer);
+            selectableObject.transform.localPosition = pos;
+            selectableObject.Init(i, SetTimeSubMenu.SetTimeTypeEnum.Minute);
+            selectableObject.ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
         }
     }
 }

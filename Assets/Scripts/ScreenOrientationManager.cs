@@ -7,7 +7,7 @@ public class ScreenOrientationManager : MonoBehaviour
 {
     private DeviceOrientation _orientation;
     
-    private void Start()
+    /*private void Start()
     {
         if (Application.platform != RuntimePlatform.Android)
         {
@@ -17,7 +17,6 @@ public class ScreenOrientationManager : MonoBehaviour
 
         _orientation = Input.deviceOrientation;
         ApplicationManager.RootMenu.ChangeOrientation(_orientation);
-        Debug.Log("START");
     }
 
     private void Update()
@@ -32,5 +31,5 @@ public class ScreenOrientationManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         ApplicationManager.RootMenu.ChangeOrientation(_orientation);
-    }
+    }*/
 }

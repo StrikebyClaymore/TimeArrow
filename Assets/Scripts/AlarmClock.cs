@@ -45,8 +45,6 @@ public class AlarmClock
         var dayDifference = dayOfWeek - (int)alarmDateTime.DayOfWeek;
         alarmDateTime = alarmDateTime.AddDays(dayDifference);
 
-        //Debug.Log(alarmDate.ToString("u"));
-        
         return alarmDateTime;
     }
 }

@@ -20,7 +20,7 @@ public class AlarmClockManager : MonoBehaviour
 
     public void StartAlarm()
     {
-        ApplicationManager.RootMenu.clockMenu.OpenAlarmSubMenu();
+        //ApplicationManager.RootMenu.clockMenu.OpenAlarmSubMenu();
         _alarmPlayer.Play();
         AlarmClock.CurrentDayAlarmSetPlayed();
     }
@@ -33,7 +33,7 @@ public class AlarmClockManager : MonoBehaviour
     public void PostponeAlarm()
     {
         AlarmClock.Minute += 5;
-        ApplicationManager.RootMenu.clockMenu.UpdateAlarmClock();
+        //ApplicationManager.RootMenu.clockMenu.UpdateAlarmClock();
     }
     
     public bool TimeIsAlarmTime()

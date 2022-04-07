@@ -1,28 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class RootMenu : MonoBehaviour
 {
-    [Header("Orientation")]
-    [SerializeField] private GameObject portrait;
-    [SerializeField] private GameObject landscape;
-    
-    [Header("Menu")]
     public ClockMenu clockMenu;
     public AlarmClockMenu alarmClockMenu;
-
-    [SerializeField] private MenuChanger menuChanger;
-       
+    [HideInInspector]
+    public BaseMenuController currentMenu;
+    
     public enum MenuTypeEnum
     {
         ClockMenu,
         AlarmClockMenu
     }
 
-    private void Start()
+    private void Awake()
     {
         clockMenu.root = this;
         alarmClockMenu.root = this;
+    }
 
+    private void Start()
+    {
         ChangeController(MenuTypeEnum.ClockMenu);
     }
 
@@ -34,18 +33,30 @@ public class RootMenu : MonoBehaviour
         {
             case MenuTypeEnum.ClockMenu:
                 clockMenu.Activate();
+                currentMenu = clockMenu;
                 break;
             case MenuTypeEnum.AlarmClockMenu:
                 alarmClockMenu.Activate();
+                currentMenu = alarmClockMenu;
                 break;
             default:
                 break;
         }
     }
 
-    public void ChangeOrientation(DeviceOrientation orientation)
+    public static DeviceOrientation Orientation = DeviceOrientation.Portrait;
+    public void TestChangeOrientation()
     {
-        switch (orientation)
+        Orientation = Orientation == DeviceOrientation.Portrait ? DeviceOrientation.LandscapeLeft : DeviceOrientation.Portrait;
+
+        currentMenu.ChangeOrientation();
+        
+        //menuChanger.ChangeView(orientation, clockMenu, alarmClockMenu);
+    }
+    
+    public void ChangeOrientation(DeviceOrientation _orientation)
+    {
+        /*switch (orientation)
         {
             case DeviceOrientation.Portrait:
                 landscape.SetActive(false);
@@ -55,9 +66,9 @@ public class RootMenu : MonoBehaviour
                 portrait.SetActive(false);
                 landscape.SetActive(true);
                 break;
-        }
+        }*/
         
-        menuChanger.Change(orientation, clockMenu, alarmClockMenu);
+        //menuChanger.ChangeView(orientation, clockMenu, alarmClockMenu);
     }
 
     private void DeactivateControllers()

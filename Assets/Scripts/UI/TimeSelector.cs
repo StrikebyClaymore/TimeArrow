@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class TimeSelector : MonoBehaviour
 {
-    //[SerializeField] private Camera cam;
     [SerializeField] private GameObject hoursClock;
     [SerializeField] private GameObject minutesClock;
     [SerializeField] private Transform hoursContainer;
@@ -15,13 +14,15 @@ public class TimeSelector : MonoBehaviour
     
     [SerializeField] private Transform circle;
     [SerializeField] private LineRenderer lineRenderer;
+    
     [SerializeField] private Text hourText;
     [SerializeField] private Text minuteText;
     [SerializeField] private Button hoursButton;
     [SerializeField] private Button minutesButton;
-    private int _hour;
-    private int _minute;
-    public SetTimeEvent SelectedTime;
+
+    public int _hour;
+    public int _minute;
+    public SetTimeEvent TimeSelected;
     
     public enum SetTimeTypeEnum
     {
@@ -29,25 +30,27 @@ public class TimeSelector : MonoBehaviour
         Minute,
         Init,
     }
+
+    public SetTimeView rootUI;
     
     private void Awake()
     {
-        SelectedTime.AddListener(SelectTime);
-        minutesClock.SetActive(false);
-        hoursClock.SetActive(true);
-        hoursButton.onClick.AddListener(SetSelectHours);
-        minutesButton.onClick.AddListener(SetSelectMinutes);
+        //TimeSelected.AddListener(SelectTime);
+        /*minutesClock.SetActive(false);
+        hoursClock.SetActive(true);*/
+        //hoursButton.onClick.AddListener(SetSelectHours);
+        //minutesButton.onClick.AddListener(SetSelectMinutes);
     }
 
     private void Start()
     {
-        Reset();
+        //Reset();
     }
-
+    
     public void Reset()
     {
-        minutesClock.SetActive(false);
-        hoursClock.SetActive(true);
+        /*minutesClock.SetActive(false);
+        hoursClock.SetActive(true);*/
         /*_hour = 12;
         _minute = 0;*/
         SelectTime(hoursContainer.GetChild(_hour).position, _hour);
@@ -65,7 +68,7 @@ public class TimeSelector : MonoBehaviour
         hoursClock.SetActive(false);
     }
     
-    private void SelectTime(Vector3 position, int time, SetTimeTypeEnum type = SetTimeTypeEnum.Init)
+    public void SelectTime(Vector3 position, int time, SetTimeSubMenu.SetTimeTypeEnum type = SetTimeSubMenu.SetTimeTypeEnum.Init)
     {
         circle.position = position;
         lineRenderer.SetPosition(0, transform.position);
@@ -74,7 +77,7 @@ public class TimeSelector : MonoBehaviour
         TimeSpan timeSpan;
         switch (type)
         {
-            case SetTimeTypeEnum.Minute:
+            case SetTimeSubMenu.SetTimeTypeEnum.Minute:
                 _minute = time;
                 timeSpan = TimeSpan.FromMinutes(time);
                 minuteText.text = timeSpan.ToString("mm");
@@ -89,16 +92,21 @@ public class TimeSelector : MonoBehaviour
         }
     }
 
-    public void SetTime(SetTimeTypeEnum type)
+    public void SetTime(SetTimeSubMenu.SetTimeTypeEnum type)
     {
         switch (type)
         {
-            case SetTimeTypeEnum.Hour:
+            case SetTimeSubMenu.SetTimeTypeEnum.Hour:
                 hoursClock.SetActive(false);
                 minutesClock.SetActive(true);
-                SelectTime(minutesContainer.GetChild(_minute).position, _minute, SetTimeTypeEnum.Minute);
+
+                SelectTime(minutesContainer.GetChild(_minute).position, _minute, SetTimeSubMenu.SetTimeTypeEnum.Minute);
+                
+                var timeSpan = TimeSpan.FromHours(_hour);
+                hourText.text = timeSpan.ToString("hh");
+                Debug.Log("SET HOUR");
                 break;
-            case SetTimeTypeEnum.Minute:
+            case SetTimeSubMenu.SetTimeTypeEnum.Minute:
                 break;
             default:
                 break;

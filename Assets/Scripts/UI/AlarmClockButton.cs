@@ -13,20 +13,28 @@ public class AlarmClockButton : MonoBehaviour
     [SerializeField] private Sprite offSprite;
     private bool _enabled;
 
-    private void Start()
+    public void ConnectOnClick(Action action)
     {
-        ConnectActions();
+        button.onClick.AddListener(() => action());
     }
 
-    private void ConnectActions()
+    public void ChangeState()
     {
-        button.onClick.AddListener(On);
-        button.onClick.AddListener(AlarmClockManager.AlarmClock.Enable);
+        if (_enabled)
+            Off();
+        else
+            On();
     }
-
-    public void On()
+    
+    private void On()
     {
-        _enabled = !_enabled;
-        image.sprite = _enabled ? onSprite : offSprite;
+        _enabled = true;
+        image.sprite = onSprite;
+    }
+    
+    private void Off()
+    {
+        _enabled = false;
+        image.sprite = offSprite;
     }
 }

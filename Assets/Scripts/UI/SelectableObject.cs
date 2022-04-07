@@ -6,23 +6,28 @@ using UnityEngine.Events;
 
 public class SelectableObject : MonoBehaviour
 {
-    [HideInInspector] public TimeSelector timeSelector;
-    [HideInInspector] public SetTimeEvent SelectedTime;
     [HideInInspector] public int time;
-    [HideInInspector] public TimeSelector.SetTimeTypeEnum type; 
+    [HideInInspector] public SetTimeSubMenu.SetTimeTypeEnum type; 
     private bool _selected;
 
-    public void Init(TimeSelector timeSelector, SetTimeEvent ev, int time, TimeSelector.SetTimeTypeEnum type)
+    private UnityEvent OnMouseUpEvent = new UnityEvent();
+    private UnityEvent OnMouseOverEvent = new UnityEvent();
+    
+    public void Init(int time, SetTimeSubMenu.SetTimeTypeEnum type)
     {
-        this.timeSelector = timeSelector;
-        SelectedTime = ev;
         this.time = time;
         this.type = type;
     }
     
+    public void ConnectActions(Action<SetTimeSubMenu.SetTimeTypeEnum, int> onMouseUp, Action<SetTimeSubMenu.SetTimeTypeEnum, int> onMouseOver)
+    {
+        OnMouseUpEvent.AddListener(() => onMouseUp(type, time));
+        OnMouseOverEvent.AddListener(() => onMouseOver(type, time));
+    }
+
     private void OnMouseUp()
     {
-        timeSelector.SetTime(type);
+        OnMouseUpEvent?.Invoke();
     }
     
     private void OnMouseExit()
@@ -35,7 +40,7 @@ public class SelectableObject : MonoBehaviour
         if (!_selected)
         {
             _selected = true;
-            SelectedTime.Invoke(transform.position, time, type);
+            OnMouseOverEvent?.Invoke();
         }
     }
 }
