@@ -49,9 +49,9 @@ public class AlarmClockManager : MonoBehaviour
     {
         if (!AlarmClock.On || AlarmClock.CurrentDayAlarmIsPlayed())
             return false;
-        var systemTime = DateTime.Now;
+        var time = Clock.Time;
         var alarmTime = AlarmClock.GetDateTime();
-        return systemTime.Hour == alarmTime.Hour && systemTime.Minute == alarmTime.Minute;
+        return time.Hour == alarmTime.Hour && time.Minute == alarmTime.Minute;
     }
 
     private void CheckNextWeek()

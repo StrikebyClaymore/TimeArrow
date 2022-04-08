@@ -38,7 +38,7 @@ public class AlarmClock
             dayOfWeek++;
         }
 
-        var currentDate = DateTime.Now;
+        var currentDate = Clock.Time;
         var alarmDateTime = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day,
             Hour, Minute, 0);
 
