@@ -40,7 +40,7 @@ public abstract class BaseMenuController<T> : BaseMenuController where T : UIVie
     public override void Activate()  
     {
         base.Activate();
-        if (RootMenu.Orientation == DeviceOrientation.Portrait)
+        if (ScreenOrientationManager.Orientation == DeviceOrientation.Portrait)
             portraitUI.Show();
         else
             landscapeUI.Show();

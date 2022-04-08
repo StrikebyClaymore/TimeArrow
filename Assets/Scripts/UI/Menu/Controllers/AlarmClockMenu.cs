@@ -30,8 +30,10 @@ public class AlarmClockMenu : BaseMenuController<AlarmClockMenuView>
     public override void ChangeOrientation()
     {
         base.ChangeOrientation();
-        currentSubMenu.Deactivate();
-        currentSubMenu.Activate();
+        if (currentSubMenu)
+        {
+            currentSubMenu.ChangeOrientation();
+        }
     }
 
     public void SetTime()

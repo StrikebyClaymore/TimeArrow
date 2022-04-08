@@ -40,11 +40,17 @@ public class SetTimeView : UIView
         builder.Init(this);
         
         timeSelector.rootUI = this;
-        
-        //TimeUpdate(SetTimeSubMenu.SetTimeTypeEnum.Init, 12);
-        //SelectTimeUpdate();
     }
 
+    public void Reset()
+    {
+        SetSelectHours();
+        lineRenderer.SetPosition(0, hoursClock.transform.position);
+        var position = hoursContainer.GetChild(TimeToHourChildIndex(0)).position;
+        lineRenderer.SetPosition(1, position);
+        circle.position = position;
+    }
+    
     public void TimeUpdate(SetTimeSubMenu.SetTimeTypeEnum type, int time)
     {
         switch (type)
@@ -71,17 +77,13 @@ public class SetTimeView : UIView
         switch (type)
         {
             case SetTimeSubMenu.SetTimeTypeEnum.Minute:
-                //_minute = time;
                 timeSpan = TimeSpan.FromMinutes(time);
                 minuteText.text = timeSpan.ToString("mm");
-                //AlarmClockManager.AlarmClock.Minute = _minute;
                 position = minutesContainer.GetChild(time).position;
                 break;
             default:
-                //_hour = time;
                 timeSpan = TimeSpan.FromHours(time);
                 hourText.text = timeSpan.ToString("hh");
-                //AlarmClockManager.AlarmClock.Hour = _hour;
                 position = hoursContainer.GetChild(TimeToHourChildIndex(time)).position;
                 break;
         }

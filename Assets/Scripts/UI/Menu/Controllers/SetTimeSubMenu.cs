@@ -27,22 +27,29 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     private void Start()
     {
         foreach (var ui in uiArray)
+        {
             ui.Init();
+        }
     }
 
     public override void Activate()
     {
         base.Activate();
         SaveOldTime();
-        InitTime();
-        //timeSelector.Reset();
+        
+        InitTime(SetTimeTypeEnum.Hour);
     }
 
-    private void InitTime()
+    public override void ChangeOrientation()
     {
-        Debug.Log("INIT");
+        base.ChangeOrientation();
+        InitTime(_type);
+    }
+
+    private void InitTime(SetTimeTypeEnum type)
+    {
         var time = 0;
-        switch (_type)
+        switch (type)
         {
             case SetTimeTypeEnum.Minute:
                 time = _minute;
@@ -53,7 +60,29 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
         }
         foreach (var ui in uiArray)
         {
-            ui.SelectTimeUpdate(_type, time);
+            ui.SelectTimeUpdate(type, time);
+        }
+    }
+
+    private void Save()
+    {
+        rootController.SetTime();
+        Close();
+    }
+
+    private void Cancel()
+    {
+        CancelTime();
+        Close();
+    }
+
+    private void Close()
+    {
+        rootController.currentSubMenu = null;
+        Deactivate();
+        foreach (var ui in uiArray)
+        {
+            ui.Reset();
         }
     }
     
@@ -65,30 +94,18 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 
     private void CancelTime()
     {
+        _hour = _oldHour;
+        _minute = _oldMinute;
         AlarmClockManager.AlarmClock.Hour = _oldHour; 
         AlarmClockManager.AlarmClock.Minute = _oldMinute;
     }
     
-    private void Save()
-    {
-        rootController.SetTime();
-        rootController.currentSubMenu = null;
-        Deactivate();
-    }
-
-    private void Cancel()
-    {
-        CancelTime();
-        rootController.currentSubMenu = null;
-        Deactivate();
-    }
-
     private void SetTime(SetTimeTypeEnum type, int time)
     {
-        /*foreach (var ui in uiArray)
+        foreach (var ui in uiArray)
         {
             ui.TimeUpdate(type, time);
-        }*/
+        }
     }
 
     private void SelectTime(SetTimeTypeEnum type, int time)
@@ -98,9 +115,11 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
         {
             case SetTimeTypeEnum.Minute:
                 _minute = time;
+                AlarmClockManager.AlarmClock.Minute = _minute;
                 break;
             default:
                 _hour = time;
+                AlarmClockManager.AlarmClock.Hour = _hour;
                 break;
         }
         

@@ -23,6 +23,7 @@ public class RootMenu : MonoBehaviour
     private void Start()
     {
         ChangeController(MenuTypeEnum.ClockMenu);
+        ChangeOrientation();
     }
 
     public void ChangeController(MenuTypeEnum menu)
@@ -44,31 +45,9 @@ public class RootMenu : MonoBehaviour
         }
     }
 
-    public static DeviceOrientation Orientation = DeviceOrientation.Portrait;
-    public void TestChangeOrientation()
+    public void ChangeOrientation()
     {
-        Orientation = Orientation == DeviceOrientation.Portrait ? DeviceOrientation.LandscapeLeft : DeviceOrientation.Portrait;
-
         currentMenu.ChangeOrientation();
-        
-        //menuChanger.ChangeView(orientation, clockMenu, alarmClockMenu);
-    }
-    
-    public void ChangeOrientation(DeviceOrientation _orientation)
-    {
-        /*switch (orientation)
-        {
-            case DeviceOrientation.Portrait:
-                landscape.SetActive(false);
-                portrait.SetActive(true);
-                break;
-            default:
-                portrait.SetActive(false);
-                landscape.SetActive(true);
-                break;
-        }*/
-        
-        //menuChanger.ChangeView(orientation, clockMenu, alarmClockMenu);
     }
 
     private void DeactivateControllers()

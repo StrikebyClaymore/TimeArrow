@@ -54,6 +54,7 @@ public class TimeSelectorBuilder : MonoBehaviour
     private void InitMinutes()
     {
         minutesContainer.GetChild(0).GetComponent<SelectableObject>().Init(0, SetTimeSubMenu.SetTimeTypeEnum.Minute);
+        minutesContainer.GetChild(0).GetComponent<SelectableObject>().ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
         
         var radius = minutesFaceImage.sizeDelta.x/2;
 
