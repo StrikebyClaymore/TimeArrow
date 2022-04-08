@@ -18,7 +18,7 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
         Init,
     }
     
-    protected override void Awake()
+    protected override void Awake()  // TODO: Сделать чтобы можно было указывать время числами
     {
         base.Awake();
         ConnectActions();

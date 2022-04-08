@@ -14,14 +14,20 @@ public class ClockMenu : BaseMenuController<ClockMenuView>
     public void SetAlarmClock()
     {
         UpdateAlarmClock();
-        
+
+        if (!AlarmClockManager.AlarmClock.On)
+        {
+            AlarmClockManager.AlarmClock.Created = true;
+            AlarmClockManager.AlarmClock.Enable();
+        }
+
         foreach (var ui in uiArray)
         {
             ui.OpenAlarmClockContainer();
         }
     }
 
-    private void UpdateAlarmClock()
+    public void UpdateAlarmClock()
     {
         AlarmClockManager.AlarmClock.ResetCurrentDay();
         foreach (var ui in uiArray)

@@ -20,7 +20,7 @@ public class AlarmClock
     
     public void ResetCurrentDay() => _playedAlarmsList[ApplicationManager.AlarmClockManager.weekOfMonth] = false;
     
-    public void Enable() => On = !On && DaysOn.FirstOrDefault(day => day);
+    public void Enable() => On = !On; //  && DaysOn.FirstOrDefault(day => day)
 
     public bool CurrentDayAlarmIsPlayed() => _playedAlarmsList[ApplicationManager.AlarmClockManager.weekOfMonth];
 

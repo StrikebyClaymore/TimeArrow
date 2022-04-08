@@ -21,33 +21,22 @@ public class ScreenOrientationManager : MonoBehaviour
         Orientation = Input.deviceOrientation;
     }
 
-    private void Update() // Если мы переходим в фейс ап, то не меняем ориентацию
+    private void Update()
     {
         if (Input.deviceOrientation == Orientation || Input.deviceOrientation == DeviceOrientation.FaceUp
                                                    || Input.deviceOrientation == DeviceOrientation.FaceDown)
             return;
 
         Orientation = Input.deviceOrientation;
-        
-        Debug.Log("0 " + Orientation);
-        
+
         StartCoroutine(ScreenRotation());
     }
 
     private IEnumerator ScreenRotation()
     {
-        Debug.Log("1 " + Orientation);
-        
         yield return new WaitForSeconds(ChangeOrientationTime);
-        
-        /*if (Orientation == DeviceOrientation.Portrait)
-            Screen.SetResolution(Screen.width, Screen.height, true);
-        else
-            Screen.SetResolution(Screen.height, Screen.width, true);*/
-        
+
         ApplicationManager.RootMenu.ChangeOrientation();
-        
-        Debug.Log("2 " + Orientation);
     }
     
     public void TestChangeOrientation()

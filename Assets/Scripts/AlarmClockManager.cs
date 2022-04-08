@@ -20,7 +20,7 @@ public class AlarmClockManager : MonoBehaviour
 
     public void StartAlarm()
     {
-        //ApplicationManager.RootMenu.clockMenu.OpenAlarmSubMenu();
+        ApplicationManager.RootMenu.ChangeController(RootMenu.MenuTypeEnum.AlarmMenu);
         _alarmPlayer.Play();
         AlarmClock.CurrentDayAlarmSetPlayed();
     }
@@ -32,11 +32,20 @@ public class AlarmClockManager : MonoBehaviour
 
     public void PostponeAlarm()
     {
-        AlarmClock.Minute += 5;
-        //ApplicationManager.RootMenu.clockMenu.UpdateAlarmClock();
+        var h = AlarmClock.Minute + 5 > 60 ? 1 : 0;
+        AlarmClock.Minute = h == 1 ? (AlarmClock.Minute + 5) % 60 : AlarmClock.Minute + 5;
+        AlarmClock.Hour = AlarmClock.Hour + h == 24 ? 0 : AlarmClock.Hour + h; // TODO: Сделать включение будильника в новый день
+        ApplicationManager.RootMenu.clockMenu.UpdateAlarmClock();
     }
-    
-    public bool TimeIsAlarmTime()
+
+    public void TimeUpdate()
+    {
+        CheckNextWeek();
+        if (TimeIsAlarmTime())
+            StartAlarm();
+    }
+
+    private bool TimeIsAlarmTime()
     {
         if (!AlarmClock.On || AlarmClock.CurrentDayAlarmIsPlayed())
             return false;
@@ -45,7 +54,7 @@ public class AlarmClockManager : MonoBehaviour
         return systemTime.Hour == alarmTime.Hour && systemTime.Minute == alarmTime.Minute;
     }
 
-    public void CheckNextWeek()
+    private void CheckNextWeek()
     {
         var systemDate = DateTime.Now;
         var systemWeekOfMonth = systemDate.WeekOfMonth();

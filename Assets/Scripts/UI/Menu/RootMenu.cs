@@ -5,15 +5,20 @@ public class RootMenu : MonoBehaviour
 {
     public ClockMenu clockMenu;
     public AlarmClockMenu alarmClockMenu;
+    public AlarmMenu alarmMenu;
     [HideInInspector]
     public BaseMenuController currentMenu;
-    
+
     public enum MenuTypeEnum
     {
         ClockMenu,
-        AlarmClockMenu
+        AlarmClockMenu,
+        AlarmMenu,
     }
 
+    private MenuTypeEnum _current;
+    private MenuTypeEnum _previous;
+    
     private void Awake()
     {
         clockMenu.root = this;
@@ -22,7 +27,8 @@ public class RootMenu : MonoBehaviour
 
     private void Start()
     {
-        ChangeController(MenuTypeEnum.ClockMenu);
+        _current = MenuTypeEnum.ClockMenu;
+        ChangeController(_current);
         ChangeOrientation();
     }
 
@@ -40,11 +46,23 @@ public class RootMenu : MonoBehaviour
                 alarmClockMenu.Activate();
                 currentMenu = alarmClockMenu;
                 break;
+            case MenuTypeEnum.AlarmMenu:
+                alarmMenu.Activate();
+                currentMenu = alarmMenu;
+                break;
             default:
                 break;
         }
+        
+        _previous = _current;
+        _current = menu;
     }
 
+    public void ReturnToPrevious()
+    {
+        ChangeController(_previous);
+    }
+    
     public void ChangeOrientation()
     {
         currentMenu.ChangeOrientation();
@@ -54,5 +72,6 @@ public class RootMenu : MonoBehaviour
     {
         clockMenu.Deactivate();
         alarmClockMenu.Deactivate();
+        alarmMenu.Deactivate();
     }
 }

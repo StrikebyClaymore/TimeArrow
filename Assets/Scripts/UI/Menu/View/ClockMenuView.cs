@@ -37,13 +37,9 @@ public class ClockMenuView: UIView
     {
         if(alarmClockContainer.activeSelf)
             return;
-        
-        AlarmClockManager.AlarmClock.Created = true;
-        AlarmClockManager.AlarmClock.Enable();
-        
+
         alarmClockContainer.SetActive(true);
         addAlarmClockButton.gameObject.SetActive(false);
-
         alarmClockButton.ChangeState();
     }
 

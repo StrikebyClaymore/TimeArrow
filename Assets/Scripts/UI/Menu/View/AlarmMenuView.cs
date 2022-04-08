@@ -1,27 +1,28 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class AlarmSubMenu : BaseMenuController
+public class AlarmMenuView : UIView
 {
     [SerializeField] private Button stopButton;
     [SerializeField] private Button postponeButton;
+
+    public Action OnStopAlarm;
+    public Action OnPostponeAlarm;
     
-    private void Awake()
+    private void Start()
     {
         stopButton.onClick.AddListener(StopAlarmButtonClick);
         postponeButton.onClick.AddListener(PostponeAlarmButtonClick);
     }
-
+    
     private void StopAlarmButtonClick()
     {
-        ApplicationManager.AlarmClockManager.StopAlarm();
-        Deactivate();
+        OnStopAlarm?.Invoke();
     }
     
     private void PostponeAlarmButtonClick()
     {
-        ApplicationManager.AlarmClockManager.StopAlarm();
-        ApplicationManager.AlarmClockManager.PostponeAlarm();
-        Deactivate();
+        OnPostponeAlarm?.Invoke();
     }
 }
