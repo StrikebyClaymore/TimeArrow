@@ -49,7 +49,7 @@ public class AlarmClockManager : MonoBehaviour
     {
         if (!AlarmClock.On || AlarmClock.CurrentDayAlarmIsPlayed())
             return false;
-        var time = Clock.Time;
+        var time = Clock.ClockTime;
         var alarmTime = AlarmClock.GetDateTime();
         return time.Hour == alarmTime.Hour && time.Minute == alarmTime.Minute;
     }

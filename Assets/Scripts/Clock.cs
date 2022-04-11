@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Timers;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Clock : MonoBehaviour
 {
+    public static DateTime ClockTime;
+    
     private TimeService _timeService;
     
     [SerializeField] private Transform hourArrow;
@@ -19,25 +19,32 @@ public class Clock : MonoBehaviour
     private Quaternion _minuteAngle;
     private Quaternion _secondAngle;
 
-    public static DateTime Time;
+    private UpdateTimer _checkGlobalTimeTimer;
+    private const float MAXTime = 2f;
+    private const string TimeLeftSaveName = "TimeLeft";
     
     private void Awake()
     {
         _timeService = new TimeService();
     }
 
-    private void Start() // TODO: Сделать считывание времени из разных источников
+    private void Start()
     {
-        Time = _timeService.GetTime();
-        timeText.text = Time.ToString("HH:mm:ss");
-        Invoke(nameof(OnTimeChanged), 1 - Time.Millisecond * 0.001f);
+        _checkGlobalTimeTimer = gameObject.AddComponent<UpdateTimer>();
+        _checkGlobalTimeTimer.Init(MAXTime, true, CheckGlobalTime, LoadTimeLeft());
+
+        ClockTime = _timeService.GetTime();
+
+        timeText.text = ClockTime.ToString("HH:mm:ss");
+        Invoke(nameof(OnTimeChanged), 1 - ClockTime.Millisecond * 0.001f);
     }
 
     private void Update()
     {
-        _secondAngle = Quaternion.Euler(0, 0, -1 * (Time.Second + (0.001f * Time.Millisecond)) * 6f);
-        _minuteAngle = Quaternion.Euler(0, 0, -1 * (Time.Minute + (Time.Second / 60f)) * 6f);
-        _hourAngle = Quaternion.Euler(0, 0, -1 * (Time.Hour * 30f + (Time.Minute * 0.5f)));
+        ClockTime = ClockTime.AddSeconds(Time.deltaTime);
+        _secondAngle = Quaternion.Euler(0, 0, -1 * (ClockTime.Second + (0.001f * ClockTime.Millisecond)) * 6f);
+        _minuteAngle = Quaternion.Euler(0, 0, -1 * (ClockTime.Minute + (ClockTime.Second / 60f)) * 6f);
+        _hourAngle = Quaternion.Euler(0, 0, -1 * (ClockTime.Hour * 30f + (ClockTime.Minute * 0.5f)));
     }
 
     private void FixedUpdate()
@@ -46,12 +53,27 @@ public class Clock : MonoBehaviour
         minuteArrow.rotation = _minuteAngle;
         hourArrow.rotation = _hourAngle;
     }
+
+    private void CheckGlobalTime()
+    {
+        ClockTime = _timeService.GetTime();
+    }
     
     private void OnTimeChanged()
     {
         Invoke(nameof(OnTimeChanged), 1 - DateTime.Now.Millisecond * 0.001f);
-        timeText.text = Time.ToString("HH:mm:ss");
+        timeText.text = ClockTime.ToString("HH:mm:ss");
 
         ApplicationManager.AlarmClockManager.TimeUpdate();
+    }
+
+    private float LoadTimeLeft()
+    {
+        return PlayerPrefs.GetFloat(TimeLeftSaveName);
+    }
+    
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetFloat(TimeLeftSaveName, _checkGlobalTimeTimer.timeLeft);
     }
 }

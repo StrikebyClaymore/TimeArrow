@@ -1,28 +1,22 @@
 ﻿ using System;
- using System.Collections;
+ using System.Globalization;
  using System.Net;
  using System.Net.Sockets;
  using UnityEngine;
- using UnityEngine.Networking;
 
  public class TimeService
  {
-     private const string NtpServer1 = "pool.ntp.org";
-     private const string NtpServer2 = "time.windows.com";
-     private const string CheckUri = "https://www.google.com";
-     
-     
+     private const string Address1 = "https://www.google.com";
+     private const string Address2 = "https://www.microsoft.com";
+
      public DateTime GetTime()
      {
          if (!CheckInternetConnection())
              return DateTime.Now;
 
-         var time1 = GetNetworkTime(NtpServer1);
-         var time2 = GetNetworkTime(NtpServer2);
+         var time1 = GetNetworkTime(Address1);
+         var time2 = GetNetworkTime(Address2);
 
-         Debug.Log(time1);
-         Debug.Log(time2);
-         
          var ms = (time1.Millisecond + time2.Millisecond) / 2;
          var s = (time1.Second + time2.Second) / 2;
          var m = (time1.Minute + time2.Minute) / 2;
@@ -32,61 +26,26 @@
 
          return time;
      }
-     
-     public DateTime GetNetworkTime(string ntpServer)
+
+     private DateTime GetNetworkTime(string address)
      {
-         // NTP message size - 16 bytes of the digest (RFC 2030)
-         var ntpData = new byte[48];
 
-         //Setting the Leap Indicator, Version Number and Mode values
-         ntpData[0] = 0x1B; //LI = 0 (no warning), VN = 3 (IPv4 only), Mode = 3 (Client Mode)
-
-         var addresses = Dns.GetHostEntry(ntpServer).AddressList;
-
-         //The UDP port number assigned to NTP is 123
-         var ipEndPoint = new IPEndPoint(addresses[0], 123);
-         //NTP uses UDP
-         using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+         var request = WebRequest.Create(address);
+         var response = (HttpWebResponse) request.GetResponse();
+         if (response.StatusCode == HttpStatusCode.OK)
          {
-             socket.Connect(ipEndPoint);
-
-             //Stops code hang if NTP is blocked
-             socket.ReceiveTimeout = 3000;
-
-             socket.Send(ntpData);
-             socket.Receive(ntpData);
+             var date = DateTime.ParseExact(response.Headers["date"],
+                 "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'",
+                 CultureInfo.InvariantCulture.DateTimeFormat,
+                 DateTimeStyles.AssumeUniversal);
+             response.Close();
+             return date;
          }
-
-         //Offset to get to the "Transmit Timestamp" field (time at which the reply 
-         //departed the server for the client, in 64-bit timestamp format."
-         const byte serverReplyTime = 40;
-
-         //Get the seconds part
-         ulong intPart = BitConverter.ToUInt32(ntpData, serverReplyTime);
-
-         //Get the seconds fraction
-         ulong fractPart = BitConverter.ToUInt32(ntpData, serverReplyTime + 4);
-
-         //Convert From big-endian to little-endian
-         intPart = SwapEndianness(intPart);
-         fractPart = SwapEndianness(fractPart);
-
-         var milliseconds = (intPart * 1000) + ((fractPart * 1000) / 0x100000000L);
-
-         //**UTC** time
-         var networkDateTime =
-             (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds((long) milliseconds);
-
-         return networkDateTime.ToLocalTime();
-     }
-
-     // stackoverflow.com/a/3294698/162671
-     static uint SwapEndianness(ulong x)
-     {
-         return (uint) (((x & 0x000000ff) << 24) +
-                        ((x & 0x0000ff00) << 8) +
-                        ((x & 0x00ff0000) >> 8) +
-                        ((x & 0xff000000) >> 24));
+         else
+         {
+             response.Close();
+             return DateTime.Now;
+         }
      }
 
      private bool CheckInternetConnection()
