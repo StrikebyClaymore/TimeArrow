@@ -20,7 +20,7 @@ public class Clock : MonoBehaviour
     private Quaternion _secondAngle;
 
     private UpdateTimer _checkGlobalTimeTimer;
-    private const float MAXTime = 2f;
+    private const float MAXTime = 3600f;
     private const string TimeLeftSaveName = "TimeLeft";
     
     private void Awake()
@@ -33,7 +33,7 @@ public class Clock : MonoBehaviour
         _checkGlobalTimeTimer = gameObject.AddComponent<UpdateTimer>();
         _checkGlobalTimeTimer.Init(MAXTime, true, CheckGlobalTime, LoadTimeLeft());
 
-        ClockTime = _timeService.GetTime();
+        ClockTime = _timeService.GetNetworkTime();
 
         timeText.text = ClockTime.ToString("HH:mm:ss");
         Invoke(nameof(OnTimeChanged), 1 - ClockTime.Millisecond * 0.001f);
@@ -56,7 +56,7 @@ public class Clock : MonoBehaviour
 
     private void CheckGlobalTime()
     {
-        ClockTime = _timeService.GetTime();
+        ClockTime = _timeService.GetNetworkTime();
     }
     
     private void OnTimeChanged()

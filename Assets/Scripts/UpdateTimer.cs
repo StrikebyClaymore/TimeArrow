@@ -28,7 +28,7 @@ public class UpdateTimer : MonoBehaviour
 
         if (timeLeft >= 0)
             return;
-
+        
         _action?.Invoke();
 
         if(_autoReset)
