@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 {
+    #region Variables
+
+    [SerializeField] private MobileKeyboardInput mobileKeyboardInput;
+    
     private int _hour;
     private int _minute;
     private SetTimeTypeEnum _type;
@@ -17,7 +21,11 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
         Minute,
         Init,
     }
+
+    #endregion
     
+    #region Base and main methods for SetTimeSubMenu
+
     protected override void Awake()  // TODO: Сделать чтобы можно было указывать время числами
     {
         base.Awake();
@@ -26,6 +34,8 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 
     private void Start()
     {
+        mobileKeyboardInput.Init(SetHour, SetMinute);
+        
         foreach (var ui in uiArray)
         {
             ui.Init();
@@ -85,7 +95,11 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
             ui.Reset();
         }
     }
+
+    #endregion
     
+    #region Base select time
+
     private void SaveOldTime()
     {
         _oldHour = AlarmClockManager.AlarmClock.Hour;
@@ -144,7 +158,41 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
             ui.SetSelectMinutes();
         }
     }
+
+    #endregion
     
+    #region Numbers input time
+
+    private void OpenSetHour()
+    {
+        SetSelectHours();
+        mobileKeyboardInput.OpenKeyboard(SetTimeTypeEnum.Hour);
+    }
+
+    private void OpenSetMinute()
+    {
+        SetSelectMinutes();
+        mobileKeyboardInput.OpenKeyboard(SetTimeTypeEnum.Minute);
+    }
+    
+    private void SetHour(int hour)
+    {
+        //print("User input hour is: " + Mathf.Min(hour, 24));
+        SelectTime(SetTimeTypeEnum.Hour, Mathf.Min(hour, 24));
+        //mobileKeyboardInput.CloseKeyBoard();
+    }
+
+    private void SetMinute(int minute)
+    {
+        //print("User input minute is: " + Mathf.Min(minute, 59));
+        SelectTime(SetTimeTypeEnum.Minute, Mathf.Min(minute, 59));
+        //mobileKeyboardInput.CloseKeyBoard();
+    }
+    
+    #endregion
+
+    #region Connect Actions
+
     private void ConnectActions()
     {
         foreach (var ui in uiArray)
@@ -155,6 +203,8 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
             ui.OnSelectTime += SelectTime;
             ui.OnSelectHours += SetSelectHours;
             ui.OnSelectMinutes += SetSelectMinutes;
+            ui.OnSetHours += OpenSetHour;
+            ui.OnSetMinutes += OpenSetMinute;
         }
     }
     
@@ -168,6 +218,10 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
             ui.OnSelectTime -= SelectTime;
             ui.OnSelectHours -= SetSelectHours;
             ui.OnSelectMinutes -= SetSelectMinutes;
+            ui.OnSetHours -= OpenSetHour;
+            ui.OnSetMinutes -= OpenSetMinute;
         }
     }
+    
+    #endregion
 }

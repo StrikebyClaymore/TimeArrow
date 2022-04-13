@@ -6,7 +6,7 @@ public class SetTimeView : UIView
 {
     [SerializeField] private TimeSelector timeSelector;
     [SerializeField] private TimeSelectorBuilder builder;
-    
+
     [SerializeField] private GameObject hoursClock;
     [SerializeField] private GameObject minutesClock;
     [SerializeField] private Transform hoursContainer;
@@ -17,26 +17,31 @@ public class SetTimeView : UIView
     
     [SerializeField] private Text hourText;
     [SerializeField] private Text minuteText;
-    [SerializeField] private Button hoursButton;
-    [SerializeField] private Button minutesButton;
-    
+    [SerializeField] private TimeButton hoursButton;
+    [SerializeField] private TimeButton minutesButton;
+
     [SerializeField] private Button saveButton;
     [SerializeField] private Button cancelButton;
 
     public Action OnSave;
     public Action OnCancel;
     public Action OnSelectHours;
+    public Action OnSetHours;
     public Action OnSelectMinutes;
+    public Action OnSetMinutes;
     public Action<SetTimeSubMenu.SetTimeTypeEnum, int> OnSetTime;
     public Action<SetTimeSubMenu.SetTimeTypeEnum, int> OnSelectTime;
-    
-    public void Init()
+
+    private void Start()
     {
         saveButton.onClick.AddListener(SaveClick);
         cancelButton.onClick.AddListener(CancelClick);
-        hoursButton.onClick.AddListener(SelectHoursClick);
-        minutesButton.onClick.AddListener(SelectMinutesClick);
-        
+        hoursButton.ConnectActions(SelectHoursClick, SetHoursClick);
+        minutesButton.ConnectActions(SelectMinutesClick, SetMinutesClick);
+    }
+
+    public void Init()
+    {
         builder.Init(this);
         
         timeSelector.rootUI = this;
@@ -117,7 +122,11 @@ public class SetTimeView : UIView
 
     private void SelectHoursClick() => OnSelectHours?.Invoke();
     
+    private void SetHoursClick() => OnSetHours?.Invoke();
+    
     private void SelectMinutesClick() => OnSelectMinutes?.Invoke();
+    
+    private void SetMinutesClick() => OnSetMinutes?.Invoke();
     
     private void SaveClick() => OnSave?.Invoke();
 
