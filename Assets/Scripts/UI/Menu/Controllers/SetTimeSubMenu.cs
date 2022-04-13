@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 {
@@ -26,7 +24,7 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     
     #region Base and main methods for SetTimeSubMenu
 
-    protected override void Awake()  // TODO: Сделать чтобы можно было указывать время числами
+    protected override void Awake()  // TODO: Пофиксить неправильное отображение стрелки и кружка у часов
     {
         base.Awake();
         ConnectActions();

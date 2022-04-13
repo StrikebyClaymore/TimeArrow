@@ -32,9 +32,17 @@ public class AlarmClockManager : MonoBehaviour
 
     public void PostponeAlarm()
     {
-        var h = AlarmClock.Minute + 5 > 60 ? 1 : 0;
+        var h = AlarmClock.Minute + 5 >= 60 ? 1 : 0;
         AlarmClock.Minute = h == 1 ? (AlarmClock.Minute + 5) % 60 : AlarmClock.Minute + 5;
-        AlarmClock.Hour = AlarmClock.Hour + h == 24 ? 0 : AlarmClock.Hour + h; // TODO: Сделать включение будильника в новый день
+        AlarmClock.Hour = AlarmClock.Hour + h == 24 ? 0 : AlarmClock.Hour + h;
+        
+        if (h == 1 && AlarmClock.Hour == 0)
+        {
+            var idx = (int) Clock.ClockTime.DayOfWeek;
+            ApplicationManager.RootMenu.alarmClockMenu.setDateSubMenu.SetDay(idx);
+            ApplicationManager.RootMenu.alarmClockMenu.SetDate();
+        }
+        
         ApplicationManager.RootMenu.clockMenu.UpdateAlarmClock();
     }
 

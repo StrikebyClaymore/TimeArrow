@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-
-public class AlarmMenu : BaseMenuController<AlarmMenuView>
+﻿public class AlarmMenu : BaseMenuController<AlarmMenuView>
 {
     protected override void Awake()
     {

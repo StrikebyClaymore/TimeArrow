@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Extensions;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AlarmClockMenu : BaseMenuController<AlarmClockMenuView>
 {
     [Header("SubMenu")]
     [SerializeField] private SetTimeSubMenu setTimeSubMenu;
-    [SerializeField] private SetDateSubMenu setDateSubMenu;
+    [SerializeField] public SetDateSubMenu setDateSubMenu;
     [HideInInspector]
     public BaseMenuController currentSubMenu = null;
 

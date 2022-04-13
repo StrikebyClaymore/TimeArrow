@@ -1,9 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
-
-public class SetDateSubMenu : SubMenuController<SetDateView, AlarmClockMenu>
+﻿public class SetDateSubMenu : SubMenuController<SetDateView, AlarmClockMenu>
 {
     private bool[] _daysOldState;
 
@@ -34,7 +29,7 @@ public class SetDateSubMenu : SubMenuController<SetDateView, AlarmClockMenu>
         }
     }
 
-    private void SetDay(int idx)
+    public void SetDay(int idx)
     {
         foreach (var ui in uiArray)
         {

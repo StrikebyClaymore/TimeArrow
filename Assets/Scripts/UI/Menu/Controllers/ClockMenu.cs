@@ -1,9 +1,4 @@
-﻿using System;
-using Extensions;
-using UnityEngine;
-using UnityEngine.UI;
-
-public class ClockMenu : BaseMenuController<ClockMenuView>
+﻿public class ClockMenu : BaseMenuController<ClockMenuView>
 {
     protected override void Awake()
     {
