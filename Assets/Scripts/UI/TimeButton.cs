@@ -4,7 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TimeButton : MonoBehaviour,  IPointerDownHandler, IPointerUpHandler
+public class TimeButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private Coroutine _press;
     private float _pressTime = 0.5f;

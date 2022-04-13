@@ -34,7 +34,7 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 
     private void Start()
     {
-        mobileKeyboardInput.Init(SetHour, SetMinute);
+        mobileKeyboardInput.Init(SetInputTime);
         
         foreach (var ui in uiArray)
         {
@@ -166,29 +166,21 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     private void OpenSetHour()
     {
         SetSelectHours();
-        mobileKeyboardInput.OpenKeyboard(SetTimeTypeEnum.Hour);
+        mobileKeyboardInput.OpenKeyboard();
     }
 
     private void OpenSetMinute()
     {
         SetSelectMinutes();
-        mobileKeyboardInput.OpenKeyboard(SetTimeTypeEnum.Minute);
-    }
-    
-    private void SetHour(int hour)
-    {
-        //print("User input hour is: " + Mathf.Min(hour, 24));
-        SelectTime(SetTimeTypeEnum.Hour, Mathf.Min(hour, 24));
-        //mobileKeyboardInput.CloseKeyBoard();
+        mobileKeyboardInput.OpenKeyboard();
     }
 
-    private void SetMinute(int minute)
+    private void SetInputTime(int hour, int minute)
     {
-        //print("User input minute is: " + Mathf.Min(minute, 59));
-        SelectTime(SetTimeTypeEnum.Minute, Mathf.Min(minute, 59));
-        //mobileKeyboardInput.CloseKeyBoard();
+        SelectTime(SetTimeTypeEnum.Hour, hour);
+        SelectTime(SetTimeTypeEnum.Minute, minute);
     }
-    
+
     #endregion
 
     #region Connect Actions
