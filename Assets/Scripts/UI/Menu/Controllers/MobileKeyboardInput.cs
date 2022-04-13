@@ -11,12 +11,7 @@ public class MobileKeyboardInput : MonoBehaviour
     private Action<int, int> SendInput;
 
     private SetTimeSubMenu.SetTimeTypeEnum _selectTimeType;
-
-    private void Awake()
-    {
-        ConnectActions();
-    }
-
+    
     public void Init(Action<int, int> sendTime)
     {
         SendInput = sendTime;
@@ -47,12 +42,6 @@ public class MobileKeyboardInput : MonoBehaviour
         {
             _inputText = _keyboard.text;
             SetTime();    
-        }
-
-        if (_keyboard.status == TouchScreenKeyboard.Status.Canceled)
-        {
-            Debug.Log("CANCEL " + _keyboard.active);
-            _keyboard.active = true;
         }
 
         if(_keyboard.status != TouchScreenKeyboard.Status.Done)
@@ -125,17 +114,6 @@ public class MobileKeyboardInput : MonoBehaviour
         ui.SetTimeText(hour,minute);
         SendInput(hour, minute);
     }
-    
-    private void OpenSetTime()
-    {
-        SetTimeToInputText();
-        
-#if UNITY_ANDROID
-        
-        _keyboard = TouchScreenKeyboard.Open(_inputText, TouchScreenKeyboardType.NumberPad, false, false, true);
-        
-#endif
-    }
 
     private void SetTimeToInputText()
     {
@@ -150,15 +128,5 @@ public class MobileKeyboardInput : MonoBehaviour
         text += timeSpan.ToString("mm");
         
         _inputText = text;
-    }
-
-    private void ConnectActions()
-    {
-        ui.OnOpenSetTime += OpenSetTime;
-    }
-    
-    private void DisconnectActions()
-    {
-        ui.OnOpenSetTime -= OpenSetTime;
     }
 }
