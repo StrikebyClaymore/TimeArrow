@@ -31,7 +31,7 @@ public class Clock : MonoBehaviour
         _checkGlobalTimeTimer = gameObject.AddComponent<UpdateTimer>();
         _checkGlobalTimeTimer.Init(MAXTime, true, CheckGlobalTime, LoadTimeLeft());
 
-        ClockTime = DateTime.Now;//_timeService.GetNetworkTime();
+        ClockTime = _timeService.GetNetworkTime();
 
         timeText.text = ClockTime.ToString("HH:mm:ss");
         Invoke(nameof(OnTimeChanged), 1 - ClockTime.Millisecond * 0.001f);

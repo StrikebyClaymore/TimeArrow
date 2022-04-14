@@ -10,7 +10,7 @@ public class MobileKeyboardInput : MonoBehaviour
     
     private Action<int, int> SendInput;
 
-    private SetTimeSubMenu.SetTimeTypeEnum _selectTimeType;
+    private SetTimeSubMenu.SetTimeType _selectTimeType;
     
     public void Init(Action<int, int> sendTime)
     {

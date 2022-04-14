@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 
-public class TimeSelectorBuilder : MonoBehaviour
+public class ClockBuilder : MonoBehaviour
 {
-    [SerializeField] private TimeSelector timeSelector;
     [SerializeField] private Transform hoursContainer;
     [SerializeField] private Transform minutesContainer;
-    [SerializeField] private SelectableObject minuteSelectableObjectPrefab;
+    [SerializeField] private ClockTimeButton minuteClockButtonPrefab;
     [SerializeField] private RectTransform minutesFaceImage;
 
     private SetTimeView _rootUI;
@@ -27,7 +26,7 @@ public class TimeSelectorBuilder : MonoBehaviour
         for (int i = 0; i < hoursContainer.childCount; i++)
         {
             var child = hoursContainer.GetChild(i);
-            var selectableObject = child.GetComponent<SelectableObject>();
+            var clockTimeButton = child.GetComponent<ClockTimeButton>();
             var time = i;
             switch (i)
             {
@@ -42,15 +41,15 @@ public class TimeSelectorBuilder : MonoBehaviour
                         time = i + 1;
                     break;
             }
-            selectableObject.Init(time, SetTimeSubMenu.SetTimeTypeEnum.Hour);
-            selectableObject.ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
+            clockTimeButton.Init(time, SetTimeSubMenu.SetTimeType.Hour);
+            clockTimeButton.ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
         }
     }
 
     private void InitMinutes()
     {
-        minutesContainer.GetChild(0).GetComponent<SelectableObject>().Init(0, SetTimeSubMenu.SetTimeTypeEnum.Minute);
-        minutesContainer.GetChild(0).GetComponent<SelectableObject>().ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
+        minutesContainer.GetChild(0).GetComponent<ClockTimeButton>().Init(0, SetTimeSubMenu.SetTimeType.Minute);
+        minutesContainer.GetChild(0).GetComponent<ClockTimeButton>().ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
         
         var radius = minutesFaceImage.sizeDelta.x/2;
 
@@ -59,10 +58,10 @@ public class TimeSelectorBuilder : MonoBehaviour
             var angle = i * -6f;
             var rotation = Quaternion.Euler(0, 0, angle);
             var pos = rotation * Vector3.up * radius;
-            var selectableObject = Instantiate(minuteSelectableObjectPrefab, Vector3.zero, rotation, minutesContainer);
-            selectableObject.transform.localPosition = pos;
-            selectableObject.Init(i, SetTimeSubMenu.SetTimeTypeEnum.Minute);
-            selectableObject.ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
+            var clockTimeButton = Instantiate(minuteClockButtonPrefab, Vector3.zero, rotation, minutesContainer);
+            clockTimeButton.transform.localPosition = pos;
+            clockTimeButton.Init(i, SetTimeSubMenu.SetTimeType.Minute);
+            clockTimeButton.ConnectActions(_rootUI.OnSetTime, _rootUI.OnSelectTime);
         }
     }
 }

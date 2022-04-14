@@ -4,8 +4,7 @@ using UnityEngine.UI;
 
 public class SetTimeView : UIView
 {
-    [SerializeField] private TimeSelector timeSelector;
-    [SerializeField] private TimeSelectorBuilder builder;
+    [SerializeField] private ClockBuilder clockBuilder;
 
     [SerializeField] private GameObject hoursClock;
     [SerializeField] private GameObject minutesClock;
@@ -29,8 +28,8 @@ public class SetTimeView : UIView
     public Action OnSetHours;
     public Action OnSelectMinutes;
     public Action OnSetMinutes;
-    public Action<SetTimeSubMenu.SetTimeTypeEnum, int> OnSetTime;
-    public Action<SetTimeSubMenu.SetTimeTypeEnum, int> OnSelectTime;
+    public Action<SetTimeSubMenu.SetTimeType, int> OnSetTime;
+    public Action<SetTimeSubMenu.SetTimeType, int> OnSelectTime;
 
     private void Start()
     {
@@ -42,9 +41,7 @@ public class SetTimeView : UIView
 
     public void Init()
     {
-        builder.Init(this);
-        
-        timeSelector.rootUI = this;
+        clockBuilder.Init(this);
     }
 
     public void Reset()
@@ -56,23 +53,22 @@ public class SetTimeView : UIView
         circle.position = position;
     }
     
-    public void TimeUpdate(SetTimeSubMenu.SetTimeTypeEnum type, int time)
+    /*public void TimeUpdate(SetTimeSubMenu.SetTimeType type)
     {
         switch (type)
         {
-            case SetTimeSubMenu.SetTimeTypeEnum.Hour:
+            case SetTimeSubMenu.SetTimeType.Hour:
                 hoursClock.SetActive(false);
                 minutesClock.SetActive(true);
-                SelectTimeUpdate(SetTimeSubMenu.SetTimeTypeEnum.Minute, time);
                 break;
-            case SetTimeSubMenu.SetTimeTypeEnum.Minute:
+            case SetTimeSubMenu.SetTimeType.Minute:
                 break;
             default:
                 break;
         }
-    }
+    }*/
 
-    public void SelectTimeUpdate(SetTimeSubMenu.SetTimeTypeEnum type, int time)
+    public void SelectTimeUpdate(SetTimeSubMenu.SetTimeType type, int time)
     {
         lineRenderer.SetPosition(0, hoursClock.transform.position);
 
@@ -81,7 +77,7 @@ public class SetTimeView : UIView
         
         switch (type)
         {
-            case SetTimeSubMenu.SetTimeTypeEnum.Minute:
+            case SetTimeSubMenu.SetTimeType.Minute:
                 timeSpan = TimeSpan.FromMinutes(time);
                 minuteText.text = timeSpan.ToString("mm");
                 position = minutesContainer.GetChild(time).position;
