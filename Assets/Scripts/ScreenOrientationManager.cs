@@ -8,15 +8,19 @@ public class ScreenOrientationManager : MonoBehaviour
     
     private void Awake()
     {
-        //Orientation = DeviceOrientation.Portrait;
-        
         if (Application.platform != RuntimePlatform.Android)
         {
             enabled = false;
             return;
         }
 
-        Orientation = Input.deviceOrientation;
+        if (Input.deviceOrientation != DeviceOrientation.LandscapeLeft &&
+            Input.deviceOrientation != DeviceOrientation.LandscapeRight)
+            Orientation = DeviceOrientation.Portrait;
+        else
+            Orientation = DeviceOrientation.LandscapeLeft;
+
+        StartCoroutine(ScreenRotation());
     }
 
     private void Update()
