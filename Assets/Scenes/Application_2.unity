@@ -13470,7 +13470,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 477463adae4fe4b419f566955d0cdc80, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.01
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -20786,6 +20786,7 @@ GameObject:
   - component: {fileID: 1527176184}
   - component: {fileID: 1527176183}
   - component: {fileID: 1527176186}
+  - component: {fileID: 1527176187}
   m_Layer: 0
   m_Name: RootMenu
   m_TagString: Untagged
@@ -20895,6 +20896,22 @@ MonoBehaviour:
   alarmClockMenu: {fileID: 2014037027}
   alarmMenu: {fileID: 320367671}
   currentMenu: {fileID: 0}
+--- !u!114 &1527176187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527176181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b1650106f74aae4ea7caffff9b56fb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root: {fileID: 0}
+  portraitUI: {fileID: 1740055180}
+  landscapeUI: {fileID: 178644067}
+  uiArray: []
 --- !u!1 &1534428743
 GameObject:
   m_ObjectHideFlags: 0
@@ -24801,7 +24818,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -2.9916992, y: 1.0238037}
+  m_AnchoredPosition: {x: -2.9916992, y: 1.0239258}
   m_SizeDelta: {x: -5.98291, y: 2.0476074}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1868064906
@@ -26604,6 +26621,7 @@ MonoBehaviour:
   uiArray: []
   rootController: {fileID: 0}
   mobileKeyboardInput: {fileID: 2014037030}
+  inputIsLocked: 0
 --- !u!114 &2014037030
 MonoBehaviour:
   m_ObjectHideFlags: 0

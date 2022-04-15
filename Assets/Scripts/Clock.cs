@@ -1,31 +1,28 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class Clock : MonoBehaviour
+public class Clock : BaseMenuController<ClockView>
 {
     public static DateTime ClockTime;
-    
-    private TimeService _timeService;
-    
-    [SerializeField] private Transform hourArrow;
-    [SerializeField] private Transform minuteArrow;
-    [SerializeField] private Transform secondArrow;
-    [SerializeField] private Text timeText;
 
-    private Quaternion _hourAngle;
-    private Quaternion _minuteAngle;
-    private Quaternion _secondAngle;
+    private TimeService _timeService;
 
     private UpdateTimer _checkGlobalTimeTimer;
     private const float MAXTime = 3600f;
     private const string TimeLeftSaveName = "TimeLeft";
+
+    private Quaternion _hourAngle;
+    private Quaternion _minuteAngle;
+    private Quaternion _secondAngle;
     
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _timeService = new TimeService();
     }
-
+    
     private void Start()
     {
         _checkGlobalTimeTimer = gameObject.AddComponent<UpdateTimer>();
@@ -33,8 +30,15 @@ public class Clock : MonoBehaviour
 
         ClockTime = _timeService.GetNetworkTime();
 
-        timeText.text = ClockTime.ToString("HH:mm:ss");
+        foreach (var ui in uiArray)
+        {
+            ui.Init(ClockTime);
+        }
+        
+        
         Invoke(nameof(OnTimeChanged), 1 - ClockTime.Millisecond * 0.001f);
+        
+        Invoke(nameof(FixTime), 1f);
     }
 
     private void Update()
@@ -47,12 +51,18 @@ public class Clock : MonoBehaviour
 
     private void FixedUpdate()
     {
-        secondArrow.rotation = _secondAngle;
-        minuteArrow.rotation = _minuteAngle;
-        hourArrow.rotation = _hourAngle;
+        foreach (var ui in uiArray)
+        {
+            ui.RotateArrows(_hourAngle, _minuteAngle, _secondAngle);    
+        }
     }
 
     private void CheckGlobalTime()
+    {
+        ClockTime = _timeService.GetNetworkTime();
+    }
+
+    private void FixTime()
     {
         ClockTime = _timeService.GetNetworkTime();
     }
@@ -60,7 +70,11 @@ public class Clock : MonoBehaviour
     private void OnTimeChanged()
     {
         Invoke(nameof(OnTimeChanged), 1 - DateTime.Now.Millisecond * 0.001f);
-        timeText.text = ClockTime.ToString("HH:mm:ss");
+
+        foreach (var ui in uiArray)
+        {
+            ui.UpdateText(ClockTime);
+        }
 
         ApplicationManager.AlarmClockManager.TimeUpdate();
     }
@@ -69,7 +83,7 @@ public class Clock : MonoBehaviour
     {
         return PlayerPrefs.GetFloat(TimeLeftSaveName);
     }
-    
+
     private void OnApplicationQuit()
     {
         PlayerPrefs.SetFloat(TimeLeftSaveName, _checkGlobalTimeTimer.timeLeft);
