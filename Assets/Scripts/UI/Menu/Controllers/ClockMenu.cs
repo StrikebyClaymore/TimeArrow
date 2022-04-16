@@ -10,7 +10,7 @@
     {
         UpdateAlarmClock();
 
-        if (!AlarmClockManager.AlarmClock.On)
+        if (!AlarmClockManager.AlarmClock.Created)
         {
             AlarmClockManager.AlarmClock.Created = true;
             AlarmClockManager.AlarmClock.Enable();
