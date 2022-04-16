@@ -32,7 +32,8 @@ public class ScreenOrientationManager : MonoBehaviour
     private void Update()
     {
         if (Input.deviceOrientation == Orientation || Input.deviceOrientation == DeviceOrientation.FaceUp
-                                                   || Input.deviceOrientation == DeviceOrientation.FaceDown)
+                                                   || Input.deviceOrientation == DeviceOrientation.FaceDown
+                                                   || Input.deviceOrientation == DeviceOrientation.Unknown)
             return;
 
         Orientation = Input.deviceOrientation;
