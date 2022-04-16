@@ -7,6 +7,8 @@ public class MobileKeyboardInput : MonoBehaviour
 
     private TouchScreenKeyboard _keyboard;
     private string _inputText = "";
+    private int _hour;
+    private int _minute;
     
     private Action<int, int> SendInput;
 
@@ -78,16 +80,16 @@ public class MobileKeyboardInput : MonoBehaviour
 #endif
     }
 
-    public void OpenKeyboard()
+    public void OpenKeyboard(int hour, int minute)
     {
         enabled = true;
         ui.Show();
 
         SetTimeToInputText();
-        
-        var h = AlarmClockManager.AlarmClock.Hour;
-        var m = AlarmClockManager.AlarmClock.Minute;
-        ui.SetTimeText(h, m);
+
+        _hour = hour;
+        _minute = minute;
+        ui.SetTimeText(hour, minute);
 
 #if UNITY_ANDROID
         
@@ -108,23 +110,20 @@ public class MobileKeyboardInput : MonoBehaviour
         int.TryParse(_inputText.Substring(0, 2), out var hour);
         int.TryParse(_inputText.Substring(2, 2), out var minute);
         
-        hour = Mathf.Min(hour, 24);
-        minute = Mathf.Min(minute, 59);
+        _hour = Mathf.Min(hour, 24);
+        _minute = minute > 59 ? 0 : minute;
         
-        ui.SetTimeText(hour,minute);
-        SendInput(hour, minute);
+        ui.SetTimeText(_hour, _minute);
+        SendInput(_hour, _minute);
     }
 
     private void SetTimeToInputText()
     {
-        var h = AlarmClockManager.AlarmClock.Hour;
-        var m = AlarmClockManager.AlarmClock.Minute;
+        ui.SetTimeText(_hour, _minute);
         
-        ui.SetTimeText(h, m);
-        
-        var timeSpan = TimeSpan.FromHours(h);
+        var timeSpan = TimeSpan.FromHours(_hour);
         var text = timeSpan.ToString("hh");
-        timeSpan = TimeSpan.FromMinutes(m);
+        timeSpan = TimeSpan.FromMinutes(_minute);
         text += timeSpan.ToString("mm");
         
         _inputText = text;

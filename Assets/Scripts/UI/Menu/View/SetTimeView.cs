@@ -92,6 +92,22 @@ public class SetTimeView : UIView
         circle.position = position;
     }
 
+    public void SetTime(SetTimeSubMenu.SetTimeType type, int time)
+    { 
+        TimeSpan timeSpan;
+        switch (type)
+        {
+            case SetTimeSubMenu.SetTimeType.Minute:
+                timeSpan = TimeSpan.FromMinutes(time);
+                minuteText.text = timeSpan.ToString("mm");
+                break;
+            default:
+                timeSpan = TimeSpan.FromHours(time);
+                hourText.text = timeSpan.ToString("hh");
+                break;
+        }
+    }
+    
     private int TimeToHourChildIndex(int time)
     {
         var idx = time;

@@ -71,6 +71,8 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 
     private void Save()
     {
+        AlarmClockManager.AlarmClock.Minute = _minute;
+        AlarmClockManager.AlarmClock.Hour = _hour;
         rootController.SetTime();
         Close();
     }
@@ -107,8 +109,6 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     {
         _hour = _oldHour;
         _minute = _oldMinute;
-        AlarmClockManager.AlarmClock.Hour = _oldHour; 
-        AlarmClockManager.AlarmClock.Minute = _oldMinute;
 
         foreach (var ui in uiArray)
         {
@@ -185,30 +185,15 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
         }
     }
 
-    private void OverSelectTime(SetTimeType type, int time)
-    {
-        if(inputIsLocked)
-            return;
-
-        SetTime(type, time);
-        
-        foreach (var ui in uiArray)
-        {
-            ui.SelectTimeUpdate(type, time);
-        }
-    }
-    
     private void SetTime(SetTimeType type, int time)
     {
         switch (type)
         {
             case SetTimeType.Minute:
                 _minute = time;
-                AlarmClockManager.AlarmClock.Minute = _minute;
                 break;
             default:
                 _hour = time;
-                AlarmClockManager.AlarmClock.Hour = _hour;
                 break;
         }
     }
@@ -246,19 +231,25 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     private void OpenSetHour()
     {
         SetSelectHours();
-        mobileKeyboardInput.OpenKeyboard();
+        mobileKeyboardInput.OpenKeyboard(_hour, _minute);
     }
 
     private void OpenSetMinute()
     {
         SetSelectMinutes();
-        mobileKeyboardInput.OpenKeyboard();
+        mobileKeyboardInput.OpenKeyboard(_hour, _minute);
     }
 
     private void SetInputTime(int hour, int minute)
     {
-        OverSelectTime(SetTimeType.Hour, hour);
-        OverSelectTime(SetTimeType.Minute, minute);
+        _hour = hour;
+        _minute = minute;
+        foreach (var ui in uiArray)
+        {
+            ui.SetTime(SetTimeType.Hour, _hour);
+            ui.SetTime(SetTimeType.Minute, _minute);
+            ui.SelectTimeUpdate(_type, _type == SetTimeType.Hour ? _hour : _minute);
+        }
     }
 
     #endregion
