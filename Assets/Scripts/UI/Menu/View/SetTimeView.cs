@@ -28,8 +28,8 @@ public class SetTimeView : UIView
     public Action OnSetHours;
     public Action OnSelectMinutes;
     public Action OnSetMinutes;
-    public Action<SetTimeSubMenu.SetTimeType, int> OnSetTime;
-    public Action<SetTimeSubMenu.SetTimeType, int> OnSelectTime;
+    public Action<ClockTimeButton> OnSetTime;
+    public Action<ClockTimeButton> OnSelectTime;
 
     private void Start()
     {

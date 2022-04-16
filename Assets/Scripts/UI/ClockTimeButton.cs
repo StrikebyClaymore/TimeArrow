@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class ClockTimeButton : MonoBehaviour
 {
@@ -8,38 +9,52 @@ public class ClockTimeButton : MonoBehaviour
     public int time;
     [HideInInspector]
     public SetTimeSubMenu.SetTimeType type; 
-    private bool _selected;
-
+    [HideInInspector]
+    public bool selected;
+    private bool _picked; 
+    
     private UnityEvent OnMouseUpEvent = new UnityEvent();
     private UnityEvent OnMouseOverEvent = new UnityEvent();
-    
+
     public void Init(int time, SetTimeSubMenu.SetTimeType type)
     {
         this.time = time;
         this.type = type;
     }
     
-    public void ConnectActions(Action<SetTimeSubMenu.SetTimeType, int> onMouseUp, Action<SetTimeSubMenu.SetTimeType, int> onMouseOver)
+    public void ConnectActions(Action<ClockTimeButton> onMouseUp, Action<ClockTimeButton> onMouseOver)
     {
-        OnMouseUpEvent.AddListener(() => onMouseUp(type, time));
-        OnMouseOverEvent.AddListener(() => onMouseOver(type, time));
+        OnMouseUpEvent.AddListener(() => onMouseUp(this));
+        OnMouseOverEvent.AddListener(() => onMouseOver(this));
+    }
+
+    private void OnMouseDown()
+    {
+        selected = true;
     }
 
     private void OnMouseUp()
     {
-        OnMouseUpEvent?.Invoke();
+        if (selected)
+            OnMouseUpEvent?.Invoke();
     }
-    
+
+    private void OnMouseEnter()
+    {
+        selected = true;
+    }
+
     private void OnMouseExit()
     {
-        _selected = false;
+        selected = false;
+        _picked = false;
     }
 
     private void OnMouseOver()
     {
-        if (_selected)
+        if (_picked)
             return;
-        _selected = true;
+        _picked = true;
         OnMouseOverEvent?.Invoke();
     }
 }

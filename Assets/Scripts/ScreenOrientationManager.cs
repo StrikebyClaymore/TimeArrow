@@ -4,7 +4,7 @@ using UnityEngine;
 public class ScreenOrientationManager : MonoBehaviour
 {
     public static DeviceOrientation Orientation;
-    private const float ChangeOrientationTime = 0.5f;
+    private const float ChangeOrientationTime = 0.55f;
     
     private void Awake()
     {
@@ -16,9 +16,15 @@ public class ScreenOrientationManager : MonoBehaviour
 
         if (Input.deviceOrientation != DeviceOrientation.LandscapeLeft &&
             Input.deviceOrientation != DeviceOrientation.LandscapeRight)
+        {
             Orientation = DeviceOrientation.Portrait;
+            Screen.orientation = (ScreenOrientation) Orientation;
+        }
         else
+        {
             Orientation = DeviceOrientation.LandscapeLeft;
+            Screen.orientation = (ScreenOrientation) Orientation;
+        }
 
         StartCoroutine(ScreenRotation());
     }
@@ -30,6 +36,7 @@ public class ScreenOrientationManager : MonoBehaviour
             return;
 
         Orientation = Input.deviceOrientation;
+        Screen.orientation = (ScreenOrientation) Orientation;
 
         StartCoroutine(ScreenRotation());
     }

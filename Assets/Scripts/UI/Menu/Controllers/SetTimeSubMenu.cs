@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 {
@@ -17,6 +19,8 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     private int _oldHour;
     private int _oldMinute;
 
+    private ClockTimeButton _selectedTimeButton;
+    
     public enum SetTimeType
     {
         Hour,
@@ -28,7 +32,7 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     
     #region Base and main methods for SetTimeSubMenu
 
-    protected override void Awake()  // TODO: Пофиксить неправильное отображение стрелки и кружка у часов. Вроде всё работает корректно, но нужны ещё проверки.
+    protected override void Awake()
     {
         base.Awake();
         ConnectActions();
@@ -48,32 +52,21 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     {
         base.Activate();
         SaveOldTime();
-        
-        InitTime(SetTimeType.Hour);
+        foreach (var ui in uiArray)
+        {
+            ui.SelectTimeUpdate(_type, _hour);   
+        }
     }
 
     public override void ChangeOrientation()
     {
+        inputIsLocked = true;
         base.ChangeOrientation();
-        InitTime(_type);
-    }
-
-    private void InitTime(SetTimeType type)
-    {
-        var time = 0;
-        switch (type)
-        {
-            case SetTimeType.Minute:
-                time = _minute;
-                break;
-            default:
-                time = _hour;
-                break;
-        }
         foreach (var ui in uiArray)
         {
-            ui.SelectTimeUpdate(type, time);
+            ui.SelectTimeUpdate(_type, _type == SetTimeType.Hour ? _hour : _minute);
         }
+        StartCoroutine(UnlockInput());
     }
 
     private void Save()
@@ -90,12 +83,14 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 
     private void Close()
     {
+        _type = SetTimeType.Hour;
+        _selectedTimeButton = null;
         rootController.currentSubMenu = null;
-        Deactivate();
         foreach (var ui in uiArray)
         {
             ui.Reset();
         }
+        Deactivate();
     }
 
     #endregion
@@ -114,27 +109,57 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
         _minute = _oldMinute;
         AlarmClockManager.AlarmClock.Hour = _oldHour; 
         AlarmClockManager.AlarmClock.Minute = _oldMinute;
-    }
-    
-    private void UpSetTime(SetTimeType type, int time)
-    {
-        inputIsLocked = true;
-        
-        SetTime(type, time);
 
         foreach (var ui in uiArray)
         {
-            ui.SelectTimeUpdate(type, time);
+            ui.SelectTimeUpdate(SetTimeType.Minute, _minute);
+            ui.SelectTimeUpdate(SetTimeType.Minute, _hour);
         }
-        
+    }
+    
+    /// <summary>
+    /// Check TimeButton Up, If Up - update time
+    /// </summary>
+    private void Update()
+    {
+        if(_selectedTimeButton is null)
+            return;
+        if (_selectedTimeButton.selected && Input.GetMouseButtonUp(0))
+            UpSetTime(_selectedTimeButton);
+    }
+
+    private void UpSetTime(ClockTimeButton button)
+    {
+        inputIsLocked = true;
+
+        var type = button.type;
+        var time = button.time;
+
+        SetTime(type, time);
+
         if (type == SetTimeType.Hour)
+        {
+            _type = SetTimeType.Minute;
             foreach (var ui in uiArray)
             {
+                ui.SelectTimeUpdate(type, time);
                 ui.SetSelectMinutes();
-                ui.SelectTimeUpdate(SetTimeType.Minute, _minute);
+                ui.SelectTimeUpdate(_type, _minute);
             }
+            
+            StartCoroutine(UnlockInput());
+        }
+        else
+        {
+            inputIsLocked = false;
 
-        StartCoroutine(UnlockInput());
+            foreach (var ui in uiArray)
+            {
+                ui.SelectTimeUpdate(type, time);
+            }
+        }
+
+        _selectedTimeButton = null;
     }
 
     private IEnumerator UnlockInput()
@@ -143,11 +168,15 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
         inputIsLocked = false;
     }
     
-    private void OverSelectTime(SetTimeType type, int time)
+    private void OverSelectTime(ClockTimeButton button)
     {
         if(inputIsLocked)
             return;
         
+        _selectedTimeButton = button;
+        var type = button.type;
+        var time = button.time;
+
         SetTime(type, time);
         
         foreach (var ui in uiArray)
@@ -156,9 +185,21 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
         }
     }
 
+    private void OverSelectTime(SetTimeType type, int time)
+    {
+        if(inputIsLocked)
+            return;
+
+        SetTime(type, time);
+        
+        foreach (var ui in uiArray)
+        {
+            ui.SelectTimeUpdate(type, time);
+        }
+    }
+    
     private void SetTime(SetTimeType type, int time)
     {
-        _type = type;
         switch (type)
         {
             case SetTimeType.Minute:
