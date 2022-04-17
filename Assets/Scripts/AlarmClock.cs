@@ -6,12 +6,20 @@ public class AlarmClock
     public bool On { get; private set; }
     public int Hour;
     public int Minute;
+    public int NewHour;
+    public int NewMinute;
     public bool[] DaysOn = new bool[7];
     private bool[] _playedAlarmsList = new bool[7];
 
     public void SetDay(int idx)
     {
         DaysOn[idx] = !DaysOn[idx];
+    }
+
+    public void SetNewTime()
+    {
+        Hour = NewHour;
+        Minute = NewMinute;
     }
     
     public void ResetAllDays() => _playedAlarmsList = new bool[7];

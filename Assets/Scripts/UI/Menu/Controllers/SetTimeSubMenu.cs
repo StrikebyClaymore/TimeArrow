@@ -71,8 +71,8 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
 
     private void Save()
     {
-        AlarmClockManager.AlarmClock.Minute = _minute;
-        AlarmClockManager.AlarmClock.Hour = _hour;
+        AlarmClockManager.AlarmClock.NewMinute = _minute;
+        AlarmClockManager.AlarmClock.NewHour = _hour;
         rootController.SetTime();
         Close();
     }
@@ -109,6 +109,8 @@ public class SetTimeSubMenu : SubMenuController<SetTimeView, AlarmClockMenu>
     {
         _hour = _oldHour;
         _minute = _oldMinute;
+        AlarmClockManager.AlarmClock.NewHour = _hour;
+        AlarmClockManager.AlarmClock.NewMinute = _minute;
 
         foreach (var ui in uiArray)
         {

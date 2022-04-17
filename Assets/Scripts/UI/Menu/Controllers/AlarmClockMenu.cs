@@ -37,7 +37,7 @@ public class AlarmClockMenu : BaseMenuController<AlarmClockMenuView>
     {
         foreach (var ui in uiArray)
         {
-            ui.SetTime(new TimeSpan().FormatToAlarmTime());
+            ui.SetTime(new TimeSpan().FormatToAlarmTime(true));
         }
     }
 
@@ -63,6 +63,7 @@ public class AlarmClockMenu : BaseMenuController<AlarmClockMenuView>
     
     private void Save()
     {
+        AlarmClockManager.AlarmClock.SetNewTime();
         root.clockMenu.SetAlarmClock();
         root.ChangeController(RootMenu.MenuTypeEnum.ClockMenu);
     }
